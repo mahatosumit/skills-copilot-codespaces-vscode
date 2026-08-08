@@ -1,0 +1,10 @@
+{
+  "version": "1.0.0",
+  "packs": [
+    { "id": "engineering", "name": "Engineering Pack", "status": "verified", "skills": ["architecture", "debugging", "refactoring", "testing", "code-review", "api-design", "git-workflow", "devops"] },
+    { "id": "ai-engineering", "name": "AI Engineering Pack", "status": "verified", "skills": ["llm-applications", "rag", "agents", "mcp", "evaluation", "prompt-engineering", "deployment"] },
+    { "id": "robotics", "name": "Robotics Pack", "status": "verified", "skills": ["ros2", "autonomous-systems", "perception", "slam", "control-systems", "embedded", "cad-automation"] },
+    { "id": "research", "name": "Research Pack", "status": "verified", "skills": ["literature-review", "paper-writing", "citation-verification", "experiment-design"] },
+    { "id": "startup", "name": "Startup Pack", "status": "verified", "skills": ["customer-discovery", "mvp-planning", "market-research", "business-analysis"] }
+  ]
+}

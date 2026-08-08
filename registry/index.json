@@ -1,0 +1,11 @@
+{
+  "version": "1.0.0",
+  "updated": "2026-08-08",
+  "skills": [],
+  "channels": {
+    "verified": "registry/verified",
+    "community": "registry/community",
+    "experimental": "registry/experimental",
+    "deprecated": "registry/deprecated"
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "name": "universal-agent-skill-os",
+  "version": "1.0.0",
+  "description": "Universal AI agent skill parser, validator, importer, quality scorer, and exporter.",
+  "type": "module",
+  "bin": {
+    "skillx": "./skillx"
+  },
+  "scripts": {
+    "test": "node --test",
+    "lint": "node scripts/check-syntax.js",
+    "validate": "npm run lint && npm test"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "license": "MIT"
+}
+
