@@ -11,15 +11,29 @@
     "category": { "type": "string", "minLength": 1 },
     "author": { "type": "string" },
     "source": { "type": "string" },
+    "source_repository": { "type": "string" },
+    "repository": { "type": "string" },
     "license": { "type": "string" },
     "version": { "type": "string" },
+    "versions": { "type": "array", "items": { "type": "string" } },
     "compatibility": { "type": "array", "items": { "enum": ["codex", "opencode", "claude-code", "copilot", "vscode", "mcp"] }, "minItems": 1, "uniqueItems": true },
     "triggers": { "type": "array", "items": { "type": "string" } },
     "dependencies": { "type": "array", "items": { "type": "string" } },
+    "changelog": { "type": "array", "items": { "type": "string" } },
     "security": { "type": "string" },
+    "security_status": { "type": "string" },
     "quality_score": { "type": "number", "minimum": 0, "maximum": 100 },
+    "popularity": {
+      "type": "object",
+      "properties": {
+        "stars": { "type": "number", "minimum": 0 },
+        "downloads": { "type": "number", "minimum": 0 },
+        "dependents": { "type": "number", "minimum": 0 }
+      }
+    },
     "tags": { "type": "array", "items": { "type": "string" } },
-    "files": { "type": "array", "items": { "type": "string" }, "minItems": 1 }
+    "files": { "type": "array", "items": { "type": "string" }, "minItems": 1 },
+    "channel": { "enum": ["verified", "community", "experimental", "deprecated"] }
   },
   "additionalProperties": true
 }

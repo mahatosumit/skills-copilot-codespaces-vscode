@@ -1,6 +1,6 @@
 {
   "name": "universal-agent-skill-os",
-  "version": "1.0.0",
+  "version": "0.2.0",
   "description": "Universal AI agent skill parser, validator, importer, quality scorer, and exporter.",
   "type": "module",
   "bin": {
@@ -16,4 +16,3 @@
   },
   "license": "MIT"
 }
-

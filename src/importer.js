@@ -1,11 +1,11 @@
 import fs from "node:fs";
 import path from "node:path";
 import { parseSkillMarkdown } from "./parser.js";
-import { scoreSkill } from "./quality.js";
+import { buildQualityReport, scoreSkill } from "./quality.js";
 import { scanSkillPackage } from "./security.js";
 import { validateSkillMetadata } from "./validator.js";
 import { stringifySimpleYaml } from "./yaml.js";
-import { copyFile, ensureDir, slugify, writeText } from "./utils.js";
+import { copyFile, ensureDir, slugify, writeJson, writeText } from "./utils.js";
 
 export function importSkill(sourcePath, options = {}) {
   const absoluteSource = path.resolve(sourcePath);
@@ -16,7 +16,7 @@ export function importSkill(sourcePath, options = {}) {
   const metadata = parseSkillMarkdown(skillFile);
   const scan = scanSkillPackage(sourceStat.isDirectory() ? absoluteSource : skillFile);
   const quality = scoreSkill(metadata, scan);
-  const packageMetadata = { ...metadata, id: slugify(metadata.id), quality_score: quality.total, security: scan.passed ? "reviewed" : "blocked" };
+  const packageMetadata = { ...metadata, id: slugify(metadata.id), quality_score: quality.total, security: scan.passed ? "reviewed" : "blocked", files: ["skill.yaml", "SKILL.md", "README.md", "quality-report.json"] };
   const validation = validateSkillMetadata(packageMetadata);
   if (!validation.valid) throw new Error(`Invalid skill metadata:\n${validation.errors.join("\n")}`);
 
@@ -26,6 +26,7 @@ export function importSkill(sourcePath, options = {}) {
   writeText(path.join(packageDir, "skill.yaml"), stringifySimpleYaml(packageMetadata) + "\n");
   copyFile(skillFile, path.join(packageDir, "SKILL.md"));
   writeText(path.join(packageDir, "README.md"), buildReadme(packageMetadata, quality, scan));
+  writeJson(path.join(packageDir, "quality-report.json"), buildQualityReport(packageMetadata, scan));
   return { packageDir, metadata: packageMetadata, quality, security: scan };
 }
 

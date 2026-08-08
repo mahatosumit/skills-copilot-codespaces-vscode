@@ -24,6 +24,7 @@ export function parseSkillMarkdown(filePath) {
     category: metadata.category || inferCategory(body, description),
     author: metadata.author || "unknown",
     source: metadata.source || "local",
+    repository: metadata.repository || metadata.source_repository || "",
     license: metadata.license || "unknown",
     version: String(metadata.version || "0.1.0"),
     compatibility: normalizeList(metadata.compatibility).length ? normalizeList(metadata.compatibility) : defaultCompatibility,
@@ -32,6 +33,8 @@ export function parseSkillMarkdown(filePath) {
     security: metadata.security || "review-required",
     quality_score: Number(metadata.quality_score || 0),
     tags: normalizeList(metadata.tags),
+    changelog: normalizeList(metadata.changelog),
+    popularity: parsePopularity(metadata),
     files: ["SKILL.md"],
     contentLength: body.trim().length,
     path: absolutePath
@@ -63,12 +66,13 @@ export function parseSkillYaml(filePath) {
 function normalizeMetadata(metadata) {
   return {
     ...metadata,
-    id: metadata.id || slugify(metadata.name),
+    id: slugify(metadata.id || metadata.name),
     name: metadata.name || metadata.id || "skill",
     description: metadata.description || "Universal skill package metadata.",
     category: metadata.category || "general",
     author: metadata.author || "unknown",
     source: metadata.source || "local",
+    repository: metadata.repository || metadata.source_repository || "",
     license: metadata.license || "unknown",
     version: String(metadata.version || "0.1.0"),
     compatibility: normalizeList(metadata.compatibility).length ? normalizeList(metadata.compatibility) : defaultCompatibility,
@@ -77,7 +81,17 @@ function normalizeMetadata(metadata) {
     security: metadata.security || "review-required",
     quality_score: Number(metadata.quality_score || 0),
     tags: normalizeList(metadata.tags),
+    changelog: normalizeList(metadata.changelog),
+    popularity: metadata.popularity && typeof metadata.popularity === "object" ? metadata.popularity : parsePopularity(metadata),
     files: normalizeList(metadata.files).length ? normalizeList(metadata.files) : ["SKILL.md"]
+  };
+}
+
+function parsePopularity(metadata) {
+  return {
+    stars: Number(metadata.stars || 0),
+    downloads: Number(metadata.downloads || 0),
+    dependents: Number(metadata.dependents || 0)
   };
 }
 

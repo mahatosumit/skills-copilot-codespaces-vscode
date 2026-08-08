@@ -2,11 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 
 export function slugify(value) {
-  return String(value || "skill")
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-+|-+$/g, "")
-    .slice(0, 80) || "skill";
+  return String(value || "skill").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 80) || "skill";
 }
 
 export function ensureDir(dir) {
@@ -22,9 +18,27 @@ export function writeText(file, text) {
   fs.writeFileSync(file, text, "utf8");
 }
 
+export function readJson(file) {
+  return JSON.parse(readText(file));
+}
+
+export function writeJson(file, value) {
+  writeText(file, `${JSON.stringify(value, null, 2)}\n`);
+}
+
 export function copyFile(source, destination) {
   ensureDir(path.dirname(destination));
   fs.copyFileSync(source, destination);
+}
+
+export function copyDir(source, destination) {
+  ensureDir(destination);
+  for (const entry of fs.readdirSync(source, { withFileTypes: true })) {
+    const from = path.join(source, entry.name);
+    const to = path.join(destination, entry.name);
+    if (entry.isDirectory()) copyDir(from, to);
+    else copyFile(from, to);
+  }
 }
 
 export function normalizeList(value) {

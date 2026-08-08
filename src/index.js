@@ -1,6 +1,13 @@
-export { parseSkillMarkdown, parseSkillPackage } from "./parser.js";
-export { validateSkillMetadata } from "./validator.js";
-export { scanSkillPackage } from "./security.js";
-export { scoreSkill } from "./quality.js";
-export { importSkill } from "./importer.js";
+export { loadCatalog } from "./catalog.js";
+export { discoverGithubTopicCandidates, discoverLocalSkills, discoverSkillsMpCandidates, evaluateCandidate } from "./discovery/index.js";
 export { exportSkillPackage, exportTargets } from "./exporter.js";
+export { importSkill } from "./importer.js";
+export { installPackage, listInstalled } from "./installer.js";
+export { parseSkillMarkdown, parseSkillPackage, parseSkillYaml } from "./parser.js";
+export { loadProfile, recommendForProfile } from "./profile.js";
+export { buildQualityReport, qualityWeights, scoreSkill } from "./quality.js";
+export { addRegistrySkill, loadRegistry, packageToRegistrySkill, validateRegistry } from "./registry.js";
+export { scanSkillPackage, securityRules } from "./security.js";
+export { loadSearchCandidates, searchSkills } from "./search.js";
+export { syncAgents } from "./sync.js";
+export { validateSkillMetadata } from "./validator.js";

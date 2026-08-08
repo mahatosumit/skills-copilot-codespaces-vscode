@@ -1,30 +1,72 @@
 # Architecture
 
-Universal Agent Skill OS provides the foundation for skill discovery, validation, packaging, and export.
+Universal Agent Skill OS is a local-first intelligence layer for AI agent skills. It turns `SKILL.md` files into reviewed universal packages, records registry metadata, recommends relevant skills, and syncs verified content into multiple agent runtimes.
 
-## Current Repository Reality
-
-The repository started with only a README, so this implementation creates a dependency-free Node.js MVP.
-
-## Core Flow
+## Lifecycle
 
 ```text
-SKILL.md -> parser -> metadata extraction -> validation -> security scan -> quality scoring -> universal skill package -> exporter
+Discover -> Parse -> Validate -> Security Scan -> Quality Score -> Approve -> Install -> Sync
 ```
 
-## Modules
+The lifecycle is deliberately explicit. Discovery creates candidates only. Installation requires verified packs or reviewed packages.
 
-- `src/parser.js`: parses frontmatter and Markdown fallback metadata.
-- `src/validator.js`: validates universal skill metadata.
-- `src/security.js`: scans for suspicious patterns and risky executable files.
-- `src/quality.js`: calculates quality score using the policy weights.
-- `src/importer.js`: creates package folders with `skill.yaml`, `SKILL.md`, and `README.md`.
-- `src/exporter.js`: exports packages into agent-specific directories.
-- `src/cli.js`: implements `skillx`.
-- `schema/skill.schema.json`: documents the universal skill schema.
-- `registry/`: stores registry index and channels.
-- `skills/catalog.json`: defines verified curated packs.
+## Core Modules
 
-## MVP Boundary
+- `src/parser.js`: parses `SKILL.md` frontmatter, Markdown fallback metadata, and generated `skill.yaml` files.
+- `src/validator.js`: validates required universal skill metadata.
+- `src/security.js`: scans packages for suspicious instructions, risky files, destructive commands, credential extraction, prompt injection, and hidden execution.
+- `src/quality.js`: calculates weighted v0.2.0 quality scores and builds `quality-report.json`.
+- `src/importer.js`: creates universal package folders containing `skill.yaml`, `SKILL.md`, `README.md`, and `quality-report.json`.
+- `src/exporter.js`: exports reviewed packages to Codex, OpenCode, Claude Code, GitHub Copilot, and VS Code layouts.
+- `src/registry.js`: loads, validates, and normalizes registry entries.
+- `src/discovery/index.js`: discovers local skills and represents remote SkillsMP/GitHub candidates without auto-installing.
+- `src/search.js`: provides lightweight local semantic search over registry entries and curated packs.
+- `src/profile.js`: loads user profiles and returns profile-based recommendations.
+- `src/installer.js`: installs only verified packs or reviewed packages into a workspace inventory.
+- `src/sync.js`: syncs installed packages to supported agent folders.
+- `src/cli.js`: exposes the `skillx` command surface.
 
-This release intentionally does not auto-import remote skills. Remote discovery should be added after local import, validation, quality scoring, and export are stable.
+## Data Layout
+
+```text
+registry/index.json        Registry metadata and channels
+skills/catalog.json        Verified curated packs
+profiles/sumit.yaml        Recommendation profile
+schema/skill.schema.json   Universal metadata schema
+packs/*/pack.json          Curated pack definitions
+```
+
+Generated package:
+
+```text
+skill-name/
+  skill.yaml
+  SKILL.md
+  README.md
+  quality-report.json
+```
+
+Installed workspace state:
+
+```text
+.skillx/
+  skills/<id>/<version>/
+  packs/<id>/pack.json
+```
+
+Synced agent targets:
+
+```text
+.codex/skills/
+.opencode/skills/
+.claude/skills/
+.github/copilot/
+.vscode/skills/
+```
+
+## Design Constraints
+
+- Keep the platform dependency-free and easy to run in constrained agent environments.
+- Prefer explicit review over automatic remote import.
+- Preserve a small module boundary for parser, validator, scanner, quality, registry, install, and sync behavior.
+- Treat external skills as untrusted until validation and security checks complete.
